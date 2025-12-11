@@ -1,19 +1,29 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+    --color-primary: #4D0414;
+    --color-accent: #E53B44;
+    --color-textOnDark: #F5E8D6;
+    --color-lightBackground: #FDF4EE;
+    --color-cardBackground: #F7D8E0;
+    --color-success: #45A846;
+    --color-primaryText: #4D0414;
+    --color-secondaryText: #7A5A61;
+    --color-ctaText: #F5E8D6;
+    --color-champagneGold: #C6A87C;
+    --color-gold: #D4AF37;
+    --color-goldLight: #F9F1D8;
+    --color-richRed: #B30000;
+    --color-placeholder: #9CA3AF;
+
+    --font-sans: var(--font-outfit);
+}
 
 :root {
-  --foreground-rgb: 77, 4, 20;
-  --background-start-rgb: 253, 244, 238;
-  --background-end-rgb: 253, 244, 238;
+    --foreground-rgb: 77, 4, 20;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+    color: rgb(var(--foreground-rgb));
+    background-color: var(--color-lightBackground);
 }
