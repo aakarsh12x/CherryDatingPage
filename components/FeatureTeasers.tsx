@@ -20,7 +20,7 @@ export default function FeatureTeasers() {
         {
             icon: Shield,
             title: 'Ironclad Safety',
-            description: 'Government ID verification, live video selfies, and on-date SOS alerts. We verify everyone so you can date without fear.',
+            description: 'Strict photo verification, and on-date SOS alerts. We verify everyone so you can date without fear.',
             color: 'bg-champagneGold/20'
         }
     ];

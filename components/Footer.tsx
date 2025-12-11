@@ -27,7 +27,7 @@ export default function Footer() {
 
                 {/* Socials */}
                 <div className="flex gap-6">
-                    <a href="#" className="p-2 bg-white/5 rounded-full hover:bg-white/10 transition-colors">
+                    <a href="https://www.instagram.com/cherry.date?igsh=b2lpNzg3bzh5ZXlj" target="_blank" rel="noopener noreferrer" className="p-2 bg-white/5 rounded-full hover:bg-white/10 transition-colors">
                         <Instagram size={20} className="text-ctaText" />
                     </a>
                     <a href="#" className="p-2 bg-white/5 rounded-full hover:bg-white/10 transition-colors">

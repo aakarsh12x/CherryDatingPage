@@ -15,11 +15,7 @@ const faqs = [
     },
     {
         question: "How do you ensure safety?",
-        answer: "We have a 3-step verification process (Government ID + Video Selfie), real-time location sharing during dates, and an emergency SOS button that alerts our team and your trusted contacts immediately."
-    },
-    {
-        question: "Is Cherry really free?",
-        answer: "Yes! Cherry is currently free to join for early access members. We will introduce premium features later, but joining the waitlist locks in your early bird status."
+        answer: "We have a strict 3-step verification process (including Video Selfie), real-time location sharing during dates, and an emergency SOS button that alerts our team and your trusted contacts immediately."
     }
 ];
 

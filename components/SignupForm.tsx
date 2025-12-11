@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle, Heart, Phone } from 'lucide-react';
+import { CheckCircle, Heart, Phone, User, Mail, Calendar } from 'lucide-react';
 
 export default function SignupForm() {
     const [formData, setFormData] = useState({
@@ -12,6 +12,7 @@ export default function SignupForm() {
         age: ''
     });
     const [submitted, setSubmitted] = useState(false);
+    const [focusedField, setFocusedField] = useState<string | null>(null);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -29,93 +30,105 @@ export default function SignupForm() {
     };
 
     return (
-        <section id="signup" className="py-20 px-4 relative overflow-hidden bg-lightBackground">
-            <div className="max-w-2xl mx-auto relative z-10">
+        <section id="signup" className="py-24 px-4 relative overflow-hidden bg-lightBackground">
+            {/* Decorative background elements */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-white rounded-full blur-3xl opacity-60 -z-10" />
+
+            <div className="max-w-xl mx-auto relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
-                    className="bg-white p-8 md:p-12 rounded-3xl shadow-xl border border-primary/5"
+                    className="bg-white/80 backdrop-blur-xl p-8 md:p-10 rounded-[2.5rem] shadow-2xl border border-white/50"
                 >
                     <div className="text-center mb-10">
-                        <h2 className="text-3xl md:text-4xl font-extrabold text-primary mb-3">
+                        <div className="inline-flex items-center justify-center p-3 bg-primary/5 rounded-2xl mb-6 text-primary">
+                            <Heart className="w-6 h-6 fill-current" />
+                        </div>
+                        <h2 className="text-3xl md:text-4xl font-extrabold text-primary mb-3 tracking-tight">
                             Join the Waitlist
                         </h2>
-                        <p className="text-lg text-secondaryText">
-                            Be among the first to experience Cherry when we launch.
+                        <p className="text-lg text-secondaryText font-medium">
+                            Your better dating life starts here.
                         </p>
                     </div>
 
                     {!submitted ? (
-                        <form onSubmit={handleSubmit} className="space-y-5">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                <div>
-                                    <label htmlFor="name" className="block text-sm font-semibold text-primary mb-2">
-                                        Full Name
-                                    </label>
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            <div className="space-y-5">
+                                {/* Name Input */}
+                                <div className="relative group">
+                                    <div className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors ${focusedField === 'name' ? 'text-primary' : 'text-gray-400'}`}>
+                                        <User className="h-5 w-5" />
+                                    </div>
                                     <input
                                         type="text"
-                                        id="name"
                                         name="name"
                                         required
-                                        placeholder="Ananya Sharma"
+                                        placeholder="Full Name"
                                         value={formData.name}
                                         onChange={handleChange}
-                                        className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-base bg-white"
+                                        onFocus={() => setFocusedField('name')}
+                                        onBlur={() => setFocusedField(null)}
+                                        className="w-full pl-11 pr-5 py-4 bg-white border-2 border-gray-100 rounded-2xl outline-none focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all text-primary font-medium placeholder:text-gray-400"
                                     />
                                 </div>
 
-                                <div>
-                                    <label htmlFor="age" className="block text-sm font-semibold text-primary mb-2">
-                                        Age
-                                    </label>
-                                    <input
-                                        type="number"
-                                        id="age"
-                                        name="age"
-                                        required
-                                        min="18"
-                                        max="100"
-                                        placeholder="25"
-                                        value={formData.age}
-                                        onChange={handleChange}
-                                        className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-base bg-white"
-                                    />
+                                {/* Age & WhatsApp Grid */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div className="relative group">
+                                        <div className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors ${focusedField === 'age' ? 'text-primary' : 'text-gray-400'}`}>
+                                            <Calendar className="h-5 w-5" />
+                                        </div>
+                                        <input
+                                            type="number"
+                                            name="age"
+                                            required
+                                            min="18"
+                                            max="99"
+                                            placeholder="Age"
+                                            value={formData.age}
+                                            onChange={handleChange}
+                                            onFocus={() => setFocusedField('age')}
+                                            onBlur={() => setFocusedField(null)}
+                                            className="w-full pl-11 pr-5 py-4 bg-white border-2 border-gray-100 rounded-2xl outline-none focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all text-primary font-medium placeholder:text-gray-400"
+                                        />
+                                    </div>
+
+                                    <div className="relative group">
+                                        <div className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors ${focusedField === 'whatsapp' ? 'text-primary' : 'text-gray-400'}`}>
+                                            <Phone className="h-5 w-5" />
+                                        </div>
+                                        <input
+                                            type="tel"
+                                            name="whatsapp"
+                                            required
+                                            placeholder="WhatsApp"
+                                            value={formData.whatsapp}
+                                            onChange={handleChange}
+                                            onFocus={() => setFocusedField('whatsapp')}
+                                            onBlur={() => setFocusedField(null)}
+                                            className="w-full pl-11 pr-5 py-4 bg-white border-2 border-gray-100 rounded-2xl outline-none focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all text-primary font-medium placeholder:text-gray-400"
+                                        />
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <label htmlFor="email" className="block text-sm font-semibold text-primary mb-2">
-                                    Email Address
-                                </label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    required
-                                    placeholder="john@example.com"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-base bg-white"
-                                />
-                            </div>
-
-                            <div>
-                                <label htmlFor="whatsapp" className="block text-sm font-semibold text-primary mb-2">
-                                    WhatsApp Number
-                                </label>
-                                <div className="relative">
-                                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-secondaryText" />
+                                {/* Email Input */}
+                                <div className="relative group">
+                                    <div className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors ${focusedField === 'email' ? 'text-primary' : 'text-gray-400'}`}>
+                                        <Mail className="h-5 w-5" />
+                                    </div>
                                     <input
-                                        type="tel"
-                                        id="whatsapp"
-                                        name="whatsapp"
+                                        type="email"
+                                        name="email"
                                         required
-                                        placeholder="+91 98765 43210"
-                                        value={formData.whatsapp}
+                                        placeholder="Email Address"
+                                        value={formData.email}
                                         onChange={handleChange}
-                                        className="w-full pl-12 pr-5 py-4 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-base bg-white"
+                                        onFocus={() => setFocusedField('email')}
+                                        onBlur={() => setFocusedField(null)}
+                                        className="w-full pl-11 pr-5 py-4 bg-white border-2 border-gray-100 rounded-2xl outline-none focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all text-primary font-medium placeholder:text-gray-400"
                                     />
                                 </div>
                             </div>
@@ -124,14 +137,16 @@ export default function SignupForm() {
                                 type="submit"
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
-                                className="w-full bg-primary text-ctaText font-bold py-5 rounded-xl shadow-lg hover:shadow-primary/30 transform transition-all duration-300 text-lg flex items-center justify-center gap-2"
+                                className="w-full bg-primary text-ctaText font-bold py-5 rounded-2xl shadow-xl shadow-primary/20 hover:shadow-primary/30 transform transition-all duration-300 text-lg flex items-center justify-center gap-3 mt-8"
                             >
-                                <Heart className="w-5 h-5 fill-current" />
-                                Secure My Spot
+                                <span>Get Early Access</span>
+                                <div className="bg-white/20 rounded-full p-1">
+                                    <Heart className="w-4 h-4 fill-current" />
+                                </div>
                             </motion.button>
 
-                            <p className="text-center text-xs text-secondaryText/70 mt-4">
-                                We respect your privacy. No spam, ever.
+                            <p className="text-center text-xs text-secondaryText/60 font-medium">
+                                🔒 Your data is encrypted and never shared.
                             </p>
                         </form>
                     ) : (
@@ -144,19 +159,22 @@ export default function SignupForm() {
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
                                 transition={{ type: "spring", stiffness: 200, damping: 15 }}
-                                className="w-20 h-20 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-6"
+                                className="w-24 h-24 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-6"
                             >
-                                <CheckCircle className="w-10 h-10 text-success" />
+                                <CheckCircle className="w-12 h-12 text-success" />
                             </motion.div>
                             <h3 className="text-3xl font-bold text-primary mb-3">
-                                Welcome to Cherry! 🍒
+                                You&apos;re In! 🍒
                             </h3>
-                            <p className="text-lg text-secondaryText mb-6">
-                                You&apos;re on the list, {formData.name.split(' ')[0]}! We&apos;ll reach out on WhatsApp soon.
+                            <p className="text-lg text-secondaryText mb-8 max-w-xs mx-auto">
+                                Thanks {formData.name.split(' ')[0]}. We&apos;ve sent a confirmation to your WhatsApp.
                             </p>
-                            <div className="bg-goldLight/50 rounded-xl p-4 text-sm text-secondaryText">
-                                We&apos;ll notify you at <strong>{formData.email}</strong>
-                            </div>
+                            <button
+                                onClick={() => setSubmitted(false)}
+                                className="text-sm font-bold text-primary hover:text-accent transition-colors underline"
+                            >
+                                Register another person
+                            </button>
                         </motion.div>
                     )}
                 </motion.div>
