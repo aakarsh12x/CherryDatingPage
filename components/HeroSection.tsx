@@ -77,7 +77,7 @@ export default function HeroSection() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 1, delay: 0.2 }}
-                    className="order-1 lg:order-2 relative"
+                    className="order-1 lg:order-2 relative hidden lg:block"
                 >
                     {/* Main "Card" Image */}
                     <div className="relative z-10 w-full aspect-square bg-white rounded-3xl overflow-hidden shadow-2xl border border-primary/5">
