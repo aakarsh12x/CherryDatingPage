@@ -11,19 +11,19 @@ const stats = [
 const hypeMessages = [
     {
         name: "Ananya S.",
-        handle: "@ananya_s",
+        handle: "@ananya.sharma24",
         text: "Just signed up for the @CherryDating waitlist! The ₹500 refund for boring dates is actually genius 😂 finally someone gets it.",
         platform: "twitter"
     },
     {
         name: "Priya M.",
-        handle: "@priya_m",
+        handle: "@priya.music_99",
         text: "A dating app that puts women's safety first AND verifies everyone via video? Count me in. 🍒 #CherryDating",
         platform: "twitter"
     },
     {
         name: "Sneha R.",
-        handle: "@sneha_r",
+        handle: "@sneha_reels_07",
         text: "The 'Women First' approach is exactly what we needed. Can't wait for the launch! ✨",
         platform: "twitter"
     }

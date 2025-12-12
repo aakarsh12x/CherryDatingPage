@@ -1,28 +1,60 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { CheckCircle, Heart, Phone, User, Mail, Calendar } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { CheckCircle, Heart, Phone, User, Mail, Calendar, ChevronDown } from 'lucide-react';
 
 export default function SignupForm() {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         whatsapp: '',
-        age: ''
+        age: '',
+        gender: ''
     });
     const [submitted, setSubmitted] = useState(false);
     const [focusedField, setFocusedField] = useState<string | null>(null);
+    const [isGenderOpen, setIsGenderOpen] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (formData.name && formData.email && formData.whatsapp && formData.age) {
+
+        // Form ID for the Google Form
+        /* 
+           Ideally, you would replace this with the actual Google Form Action URL. 
+           To get this: 
+           1. Create a Google Form.
+           2. Get the "pre-filled link".
+           3. Inspect the form submission to get entry IDs (like entry.123456).
+           4. Use a hidden iframe to submit without redirecting.
+        */
+
+        // For now, we will assume submission to a generic endpoint or valid structure.
+        // Since we don't have the specific Google Form URL and field IDs from the user, 
+        // we will keep the submission logic ready to be plugged in.
+
+        if (formData.name && formData.email && formData.whatsapp && formData.age && formData.gender) {
+
+            // Simulating a network request delay
+            await new Promise(resolve => setTimeout(resolve, 800));
+
             setSubmitted(true);
             console.log('Form submitted:', formData);
+
+            // Example of how the real submission code would look:
+            /*
+            const googleFormUrl = "https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse";
+            const formBody = new FormData();
+            formBody.append("entry.123456", formData.name);
+            formBody.append("entry.234567", formData.email);
+            // ... etc
+            
+            await fetch(googleFormUrl, { method: 'POST', body: formBody, mode: 'no-cors' });
+            */
         }
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
@@ -75,7 +107,7 @@ export default function SignupForm() {
                                     />
                                 </div>
 
-                                {/* Age & WhatsApp Grid */}
+                                {/* Age & Gender Grid */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                     <div className="relative group">
                                         <div className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors ${focusedField === 'age' ? 'text-primary' : 'text-gray-400'}`}>
@@ -97,21 +129,71 @@ export default function SignupForm() {
                                     </div>
 
                                     <div className="relative group">
-                                        <div className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors ${focusedField === 'whatsapp' ? 'text-primary' : 'text-gray-400'}`}>
-                                            <Phone className="h-5 w-5" />
+                                        <div className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors ${focusedField === 'gender' ? 'text-primary' : 'text-gray-400'}`}>
+                                            <User className="h-5 w-5" />
                                         </div>
-                                        <input
-                                            type="tel"
-                                            name="whatsapp"
-                                            required
-                                            placeholder="WhatsApp"
-                                            value={formData.whatsapp}
-                                            onChange={handleChange}
-                                            onFocus={() => setFocusedField('whatsapp')}
-                                            onBlur={() => setFocusedField(null)}
-                                            className="w-full pl-11 pr-5 py-4 bg-white border-2 border-gray-100 rounded-2xl outline-none focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all text-primary font-medium placeholder:text-gray-400"
-                                        />
+
+                                        <div className="relative">
+                                            <button
+                                                type="button"
+                                                onClick={() => setIsGenderOpen(!isGenderOpen)}
+                                                onBlur={() => setTimeout(() => setIsGenderOpen(false), 200)}
+                                                className={`w-full pl-11 pr-10 py-4 bg-white border-2 rounded-2xl outline-none text-left font-medium transition-all flex items-center justify-between ${isGenderOpen ? 'border-primary/20 ring-4 ring-primary/5' : 'border-gray-100'
+                                                    }`}
+                                            >
+                                                <span className={`${formData.gender ? 'text-primary' : 'text-gray-400'}`}>
+                                                    {formData.gender || 'Gender'}
+                                                </span>
+                                                <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isGenderOpen ? 'rotate-180' : ''}`} />
+                                            </button>
+
+                                            <AnimatePresence>
+                                                {isGenderOpen && (
+                                                    <motion.div
+                                                        initial={{ opacity: 0, y: 10 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        exit={{ opacity: 0, y: 10 }}
+                                                        className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50 py-2"
+                                                    >
+                                                        {['Male', 'Female', 'Non-binary', 'Prefer not to say'].map((option) => (
+                                                            <button
+                                                                key={option}
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    setFormData({ ...formData, gender: option });
+                                                                    setIsGenderOpen(false);
+                                                                }}
+                                                                className="w-full text-left px-6 py-3 text-primary font-medium hover:bg-primary/5 transition-colors flex items-center justify-between group/option"
+                                                            >
+                                                                {option}
+                                                                {formData.gender === option && (
+                                                                    <CheckCircle className="w-4 h-4 text-primary" />
+                                                                )}
+                                                            </button>
+                                                        ))}
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+                                        </div>
                                     </div>
+                                </div>
+
+                                {/* WhatsApp Input */}
+                                <div className="relative group">
+                                    <div className={`absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors ${focusedField === 'whatsapp' ? 'text-primary' : 'text-gray-400'}`}>
+                                        <Phone className="h-5 w-5" />
+                                    </div>
+                                    <input
+                                        type="tel"
+                                        name="whatsapp"
+                                        required
+                                        placeholder="WhatsApp Number"
+                                        value={formData.whatsapp}
+                                        onChange={handleChange}
+                                        onFocus={() => setFocusedField('whatsapp')}
+                                        onBlur={() => setFocusedField(null)}
+                                        className="w-full pl-11 pr-5 py-4 bg-white border-2 border-gray-100 rounded-2xl outline-none focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all text-primary font-medium placeholder:text-gray-400"
+                                    />
                                 </div>
 
                                 {/* Email Input */}
