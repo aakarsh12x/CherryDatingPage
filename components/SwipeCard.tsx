@@ -6,7 +6,7 @@ import { motion, useMotionValue, useTransform, PanInfo } from 'framer-motion';
 import { MapPin, Briefcase, Heart, X, RotateCcw, Bookmark } from 'lucide-react';
 import { clsx } from 'clsx';
 
-interface User {
+export interface User {
     id: string;
     name: string;
     age: number;
@@ -14,6 +14,13 @@ interface User {
     occupation: string;
     city: string;
     matchScore?: number;
+    bio?: string;
+    photos?: string[];
+    prompts?: { question: string; answer: string }[];
+    height?: string;
+    education?: string;
+    distance?: string;
+    interests?: string[];
 }
 
 interface SwipeCardProps {
@@ -22,10 +29,11 @@ interface SwipeCardProps {
     onPass: () => void;
     onSave: () => void;
     onUndo: () => void;
+    onTap: () => void;
     isTop: boolean;
 }
 
-export function SwipeCard({ user, onLike, onPass, onSave, onUndo, isTop }: SwipeCardProps) {
+export function SwipeCard({ user, onLike, onPass, onSave, onUndo, onTap, isTop }: SwipeCardProps) {
     const x = useMotionValue(0);
     const y = useMotionValue(0);
 
@@ -40,6 +48,11 @@ export function SwipeCard({ user, onLike, onPass, onSave, onUndo, isTop }: Swipe
             onLike();
         } else if (info.offset.x < -threshold) {
             onPass();
+        } else {
+            // If little movement, consider it a tap if we didn't drag far
+            if (Math.abs(info.offset.x) < 5 && Math.abs(info.offset.y) < 5) {
+                onTap();
+            }
         }
     };
 
@@ -60,6 +73,10 @@ export function SwipeCard({ user, onLike, onPass, onSave, onUndo, isTop }: Swipe
             dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
             dragElastic={1}
             onDragEnd={handleDragEnd}
+            onClick={() => {
+                // Fallback for click not captured by drag
+                if (isTop) onTap();
+            }}
             whileTap={{ scale: 0.98 }}
         >
             {/* Photo */}
@@ -92,7 +109,7 @@ export function SwipeCard({ user, onLike, onPass, onSave, onUndo, isTop }: Swipe
             <div className="absolute inset-0 gradient-card-overlay" />
 
             {/* User Info */}
-            <div className="absolute bottom-0 left-0 right-0 p-6">
+            <div className="absolute bottom-0 left-0 right-0 p-6 pointer-events-none">
                 <div className="flex items-center gap-3 mb-2">
                     <h2 className="text-3xl font-extrabold text-white">
                         {user.name}, {user.age}
@@ -114,37 +131,37 @@ export function SwipeCard({ user, onLike, onPass, onSave, onUndo, isTop }: Swipe
                     <MapPin size={14} />
                     <span className="text-[15px] font-medium">{user.city}</span>
                 </div>
+            </div>
 
-                {/* Action Buttons */}
-                <div className="flex justify-center items-center gap-5 mt-6">
-                    <button
-                        onClick={onUndo}
-                        className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform"
-                    >
-                        <RotateCcw size={20} className="text-champagneGold" />
-                    </button>
+            {/* Action Buttons - Rendered outside the capture area to prevent tap propagation issues if needed, but here we use pointer-events-auto to re-enable them */}
+            <div className="absolute bottom-6 left-0 right-0 flex justify-center items-center gap-5 pointer-events-auto" onClick={(e) => e.stopPropagation()}>
+                <button
+                    onClick={onUndo}
+                    className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform"
+                >
+                    <RotateCcw size={20} className="text-champagneGold" />
+                </button>
 
-                    <button
-                        onClick={onPass}
-                        className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
-                    >
-                        <X size={30} className="text-error" strokeWidth={3} />
-                    </button>
+                <button
+                    onClick={onPass}
+                    className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
+                >
+                    <X size={30} className="text-error" strokeWidth={3} />
+                </button>
 
-                    <button
-                        onClick={onLike}
-                        className="w-16 h-16 gradient-button rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
-                    >
-                        <Heart size={30} className="text-white fill-white" />
-                    </button>
+                <button
+                    onClick={onLike}
+                    className="w-16 h-16 gradient-button rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
+                >
+                    <Heart size={30} className="text-white fill-white" />
+                </button>
 
-                    <button
-                        onClick={onSave}
-                        className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform"
-                    >
-                        <Bookmark size={20} className="text-primary" />
-                    </button>
-                </div>
+                <button
+                    onClick={onSave}
+                    className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform"
+                >
+                    <Bookmark size={20} className="text-primary" />
+                </button>
             </div>
         </motion.div>
     );

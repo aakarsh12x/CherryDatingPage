@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { MapPin, Bell, SlidersHorizontal } from 'lucide-react';
-import { SwipeCard } from '@/components/SwipeCard';
+import { MapPin, Bell, SlidersHorizontal, ArrowUp } from 'lucide-react';
+import { SwipeCard, User } from '@/components/SwipeCard';
 import { BottomNav } from '@/components/BottomNav';
+import { FullProfileModal } from '@/components/FullProfileModal';
 
 // Mock data
-const mockUsers = [
+const mockUsers: User[] = [
     {
         id: '1',
         name: 'Sarah',
@@ -15,6 +16,19 @@ const mockUsers = [
         occupation: 'Product Designer',
         city: 'Mumbai',
         matchScore: 92,
+        distance: '4km away',
+        height: '5\'6"',
+        bio: "Just a girl looking for someone who looks at me the way I look at pizza. 🍕\n\nLove hiking on weekends and trying out new cafes.",
+        interests: ['Hiking', 'Photography', 'Coffee'],
+        prompts: [
+            { question: "A life goal of mine", answer: "Visit every continent before I'm 30 and try the local coffee in each one." },
+            { question: "The way to win me over is", answer: "Bring me tacos and let's watch a documentary about space." }
+        ],
+        photos: [
+            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&h=800&fit=crop',
+            'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&h=800&fit=crop',
+            'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&h=800&fit=crop',
+        ]
     },
     {
         id: '2',
@@ -24,6 +38,8 @@ const mockUsers = [
         occupation: 'Software Engineer',
         city: 'Bangalore',
         matchScore: 87,
+        bio: 'Coding by day, amateur chef by night. Looking for a taste tester!',
+        interests: ['Coding', 'Cooking', 'Travel'],
     },
     {
         id: '3',
@@ -48,6 +64,7 @@ const mockUsers = [
 export default function HomePage() {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [city] = useState('Mumbai');
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
     const handleLike = () => {
         console.log('Liked:', mockUsers[currentIndex]?.name);
@@ -68,6 +85,10 @@ export default function HomePage() {
         if (currentIndex > 0) {
             setCurrentIndex(prev => prev - 1);
         }
+    };
+
+    const handleTap = (user: User) => {
+        setSelectedUser(user);
     };
 
     const visibleUsers = mockUsers.slice(currentIndex, currentIndex + 2);
@@ -118,6 +139,12 @@ export default function HomePage() {
                     </div>
                 ) : (
                     <div className="relative w-full max-w-[360px] aspect-[3/4]">
+                        {/* Hint Arrow */}
+                        <div className="absolute -top-12 left-1/2 -translate-x-1/2 text-white/50 animate-bounce flex flex-col items-center">
+                            <ArrowUp size={24} />
+                            <span className="text-xs font-medium tracking-wider uppercase">Swipe Up</span>
+                        </div>
+
                         {visibleUsers.map((user, index) => (
                             <SwipeCard
                                 key={user.id}
@@ -127,6 +154,7 @@ export default function HomePage() {
                                 onPass={handlePass}
                                 onSave={handleSave}
                                 onUndo={handleUndo}
+                                onTap={() => handleTap(user)}
                             />
                         )).reverse()}
                     </div>
@@ -134,6 +162,17 @@ export default function HomePage() {
             </div>
 
             <BottomNav />
+
+            {/* Full Profile Modal */}
+            {selectedUser && (
+                <FullProfileModal
+                    user={selectedUser}
+                    isOpen={!!selectedUser}
+                    onClose={() => setSelectedUser(null)}
+                    onLike={handleLike}
+                    onPass={handlePass}
+                />
+            )}
         </div>
     );
 }
