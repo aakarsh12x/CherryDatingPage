@@ -1,22 +1,38 @@
 @import "tailwindcss";
 
 @theme {
-    --color-primary: #4D0414;
+    /* Primary Colors */
+    --color-primary: #5e0b1d;
+    --color-brandDark: #5b0719;
     --color-accent: #E53B44;
     --color-textOnDark: #F5E8D6;
     --color-lightBackground: #FDF4EE;
     --color-cardBackground: #F7D8E0;
     --color-success: #45A846;
-    --color-primaryText: #4D0414;
+
+    /* Text Colors */
+    --color-primaryText: #590a1b;
     --color-secondaryText: #7A5A61;
     --color-ctaText: #F5E8D6;
+    --color-neutralText: #2D2426;
+    --color-captionText: #635255;
+    --color-placeholder: #9CA3AF;
+
+    /* Gold Accents */
     --color-champagneGold: #C6A87C;
     --color-gold: #D4AF37;
     --color-goldLight: #F9F1D8;
-    --color-richRed: #B30000;
-    --color-placeholder: #9CA3AF;
 
+    /* Special */
+    --color-richRed: #820707;
+    --color-error: #FF6B6B;
+    --color-like: #4CD964;
+
+    /* Fonts */
     --font-sans: var(--font-outfit);
+    --font-brand: var(--font-lobster);
+    --font-display: var(--font-manrope);
+    --font-serif: var(--font-domine);
 }
 
 :root {
@@ -26,4 +42,43 @@
 body {
     color: rgb(var(--foreground-rgb));
     background-color: var(--color-lightBackground);
+}
+
+/* Gradient Backgrounds */
+.gradient-warm {
+    background: linear-gradient(135deg, #FFF5F0 0%, #FFF0E5 50%, #FCEFE9 100%);
+}
+
+.gradient-auth {
+    background: linear-gradient(180deg, #FFF5F0 0%, #FFF0E5 50%, #FCEFE9 100%);
+}
+
+.gradient-home {
+    background: linear-gradient(135deg, #FEF5EF 0%, #FFEAE6 25%, #FFE3DC 50%, #FFDCD5 75%, #F8EBE3 100%);
+}
+
+/* Button Gradient */
+.gradient-button {
+    background: linear-gradient(135deg, var(--color-primary) 0%, #3A0310 100%);
+}
+
+/* Card Gradient Overlay */
+.gradient-card-overlay {
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.4) 30%, rgba(0, 0, 0, 0.85) 70%, rgba(0, 0, 0, 0.95) 100%);
+}
+
+/* Glass Effect */
+.glass {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* Premium Shadow */
+.shadow-premium {
+    box-shadow: 0 8px 32px rgba(94, 11, 29, 0.15);
+}
+
+.shadow-card {
+    box-shadow: 0 6px 24px rgba(94, 11, 29, 0.12);
 }
