@@ -1,0 +1,171 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// User authentication and basic info
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  phoneNumber   String?   @unique @map("phone_number")
+  passwordHash  String    @map("password_hash")
+  isVerified    Boolean   @default(false) @map("is_verified")
+  isActive      Boolean   @default(true) @map("is_active")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  lastLogin     DateTime? @map("last_login")
+
+  profile       UserProfile?
+  photos        UserPhoto[]
+  interests     UserInterest[]
+  prompts       UserPrompt[]
+  lifestyle     UserLifestyle?
+
+  @@map("users")
+}
+
+// User profile and onboarding data
+model UserProfile {
+  id                         String    @id @default(uuid())
+  userId                     String    @unique @map("user_id")
+  firstName                  String?   @map("first_name")
+  dateOfBirth                DateTime? @map("date_of_birth")
+  gender                     Gender?
+  interestedIn               InterestedIn? @map("interested_in")
+  height                     Int?      // in cm
+  city                       String?
+  latitude                   Float?
+  longitude                  Float?
+  occupation                 String?
+  education                  String?
+  company                    String?
+  bio                        String?   @db.Text
+  relationshipGoal           RelationshipGoal? @map("relationship_goal")
+  onboardingCompleted        Boolean   @default(false) @map("onboarding_completed")
+  profileCompletionPercentage Int      @default(0) @map("profile_completion_percentage")
+  createdAt                  DateTime  @default(now()) @map("created_at")
+  updatedAt                  DateTime  @updatedAt @map("updated_at")
+
+  user                       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+// User photos
+model UserPhoto {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  photoUrl   String   @map("photo_url")
+  photoOrder Int      @map("photo_order")
+  isPrimary  Boolean  @default(false) @map("is_primary")
+  uploadedAt DateTime @default(now()) @map("uploaded_at")
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_photos")
+}
+
+// Interests catalog
+model Interest {
+  id    String         @id @default(uuid())
+  name  String         @unique
+  users UserInterest[]
+
+  @@map("interests")
+}
+
+// User interests (many-to-many)
+model UserInterest {
+  userId     String @map("user_id")
+  interestId String @map("interest_id")
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  interest   Interest @relation(fields: [interestId], references: [id], onDelete: Cascade)
+
+  @@id([userId, interestId])
+  @@map("user_interests")
+}
+
+// Prompts catalog
+model Prompt {
+  id       String       @id @default(uuid())
+  question String       @db.Text
+  users    UserPrompt[]
+
+  @@map("prompts")
+}
+
+// User prompts (questions & answers)
+model UserPrompt {
+  id           String @id @default(uuid())
+  userId       String @map("user_id")
+  promptId     String @map("prompt_id")
+  answer       String @db.Text
+  displayOrder Int    @map("display_order")
+
+  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prompt       Prompt @relation(fields: [promptId], references: [id], onDelete: Cascade)
+
+  @@map("user_prompts")
+}
+
+// User lifestyle choices
+model UserLifestyle {
+  id                 String            @id @default(uuid())
+  userId             String            @unique @map("user_id")
+  drinking           DrinkingFrequency?
+  smoking            SmokingFrequency?
+  exercise           ExerciseFrequency?
+  pets               String[]          // Array of pet types
+  dietaryPreference  String?           @map("dietary_preference")
+
+  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_lifestyle")
+}
+
+// Enums
+enum Gender {
+  MAN
+  WOMAN
+  NON_BINARY
+  OTHER
+}
+
+enum InterestedIn {
+  MEN
+  WOMEN
+  EVERYONE
+}
+
+enum RelationshipGoal {
+  LONG_TERM
+  SHORT_TERM
+  FRIENDSHIP
+  FIGURING_OUT
+}
+
+enum DrinkingFrequency {
+  NEVER
+  SOCIALLY
+  REGULARLY
+}
+
+enum SmokingFrequency {
+  NEVER
+  SOCIALLY
+  REGULARLY
+}
+
+enum ExerciseFrequency {
+  NEVER
+  SOMETIMES
+  OFTEN
+  DAILY
+}
